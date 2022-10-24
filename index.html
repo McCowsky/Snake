@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Snake game">
+    <meta name="author" content="Mateusz Makowski">
+    <meta name="keywords" content="HTML, CSS, TailwindCSS, git, Snake, game, TypeScripit, JS, retro">
+    <link rel="stylesheet" href="/dist/output.css">
+    <script src="/dist/js/canvas.js" defer></script>
+
+    <title>Snake game</title>
+</head>
+
+<body class="h-full">
+    <div class="bg-red-300 w-full h-full sm:h-[100vh] sm:flex sm:flex-col sm:items-center sm:justify-center relative">
+        <div class="w-full aspect-square sm:max-w-[450px] sm:max-h-[450px]">
+            <canvas id="canvas" class="block border-2 "></canvas>
+
+        </div>
+        <h3 id="pointBox">asdasd</h3>
+        <div>
+            <button>up</button>
+            <button>left</button>
+            <button>right</button>
+            <button>down</button>
+        </div>
+        <!-- <div class="w-full h-full bg-black absolute top-0 hidden" id="gameOver">
+            <h2 class="text-white">GAME OVER</h2>
+        </div> -->
+        <div class="w-full h-full bg-black/75 absolute top-0 text-white flex flex-col items-center justify-center"
+            id="mainMenu">
+            <div class="w-[350px] h-[350px] bg-black flex flex-col items-center justify-center">
+                <h2 class="hidden" id="gameOver">GAME OVER</h2>
+                <form action="" class="flex flex-col items-center justify-center">
+                    <label for="speed">Game speed</label>
+                    <select name="speed" id="speed">
+                        <option value="slow">slow</option>
+                        <option value="normal">normal</option>
+                        <option value="fast">fast</option>
+                    </select>
+                    <label for="size">Board size</label>
+                    <select name="size" id="size">
+                        <option value="10">10x10</option>
+                        <option value="15">15x15</option>
+                    </select>
+                    <button id="startButton">Start game</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

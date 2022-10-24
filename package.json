@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "tailwindcss": "^3.2.0"
+  },
+  "dependencies": {
+    "konva": "^8.3.13"
+  }
+}
