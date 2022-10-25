@@ -13,7 +13,7 @@ canvas.width = canvas.offsetWidth;
 canvas.height = canvas.offsetHeight;
 const SCREEN_CENTER = { x: canvas.offsetWidth / 2, y: canvas.offsetHeight / 2 };
 console.log(canvas.width);
-let points = 0;
+//let points = 0;
 let speed = 5;
 let grid = 10;
 let gridSize = canvas.width / grid;
@@ -36,9 +36,28 @@ class Snake {
     drawSnake() {
         ctx === null || ctx === void 0 ? void 0 : ctx.fillRect(this.pos.x, this.pos.y, this.size.w, this.size.h);
     }
+    moveSnake() {
+        if (snakeParts[0].vel.x != 0 || snakeParts[0].vel.y != 0) {
+            snakeParts.unshift(new Snake({ x: snakeParts[0].pos.x, y: snakeParts[0].pos.y }, { x: snakeParts[0].vel.x, y: snakeParts[0].vel.y }, { w: gridSize, h: gridSize }));
+            snakeParts.pop();
+        }
+    }
     update() {
-        this.pos.x += this.vel.x;
-        this.pos.y += this.vel.y;
+        // this.pos.x += this.vel.x;
+        // this.pos.y += this.vel.y;
+        snakeParts[0].pos.x += snakeParts[0].vel.x;
+        snakeParts[0].pos.y += snakeParts[0].vel.y;
+        // const newsnakeParts = [
+        //   new Snake(
+        //     { x: snakeParts[0].pos.x, y: snakeParts[0].pos.y },
+        //     { x: snakeParts[0].vel.x, y: snakeParts[0].vel.y },
+        //     { w: gridSize, h: gridSize }
+        //   ),
+        // ];
+        // for (let i = 1; i < snakeParts.length ; ++i) {
+        //   newsnakeParts.push(snakeParts[i-1]);
+        // }
+        // snakeParts = newsnakeParts;
     }
 }
 class Fruit {
@@ -63,40 +82,43 @@ class Fruit {
     }
 }
 class Game {
+    constructor() {
+        this.points = 0;
+    }
     keyPress() {
         window.addEventListener("keydown", function (e) {
             switch (e.key) {
                 case "ArrowLeft": //left
                     if (snakeParts[0].vel.x === gridSize)
                         return;
-                    for (let i = 0; i <= snakeParts.length - 1; i++) {
-                        snakeParts[i].vel.y = 0;
-                        snakeParts[i].vel.x = -gridSize;
-                    }
+                    //for (let i = 0; i <= snakeParts.length - 1; i++) {
+                    snakeParts[0].vel.y = 0;
+                    snakeParts[0].vel.x = -gridSize;
+                    //}
                     break;
                 case "ArrowUp": //up
                     if (snakeParts[0].vel.y === gridSize)
                         return;
-                    for (let i = 0; i <= snakeParts.length - 1; i++) {
-                        snakeParts[i].vel.y = -gridSize;
-                        snakeParts[i].vel.x = 0;
-                    }
+                    // for (let i = 0; i <= snakeParts.length - 1; i++) {
+                    snakeParts[0].vel.y = -gridSize;
+                    snakeParts[0].vel.x = 0;
+                    // }
                     break;
                 case "ArrowRight": //right
                     if (snakeParts[0].vel.x === -gridSize)
                         return;
-                    for (let i = 0; i <= snakeParts.length - 1; i++) {
-                        snakeParts[i].vel.y = 0;
-                        snakeParts[i].vel.x = gridSize;
-                    }
+                    //for (let i = 0; i <= snakeParts.length - 1; i++) {
+                    snakeParts[0].vel.y = 0;
+                    snakeParts[0].vel.x = gridSize;
+                    //}
                     break;
                 case "ArrowDown": //down
                     if (snakeParts[0].vel.y === -gridSize)
                         return;
-                    for (let i = 0; i <= snakeParts.length - 1; i++) {
-                        snakeParts[i].vel.y = gridSize;
-                        snakeParts[i].vel.x = 0;
-                    }
+                    //for (let i = 0; i <= snakeParts.length - 1; i++) {
+                    snakeParts[0].vel.y = gridSize;
+                    snakeParts[0].vel.x = 0;
+                    //}
                     break;
             }
         }, false);
@@ -105,10 +127,14 @@ class Game {
     start() {
         mainMenu.classList.add("hidden");
         stopGame = false;
-        console.log("asdasdasd");
         game = new Game();
         snakeParts = [
             new Snake({ x: SCREEN_CENTER.x, y: SCREEN_CENTER.y }, { x: 0, y: 0 }, { w: gridSize, h: gridSize }),
+            // new Snake(
+            //   { x: SCREEN_CENTER.x - gridSize, y: SCREEN_CENTER.y },
+            //   { x: 0, y: 0 },
+            //   { w: gridSize, h: gridSize }
+            // ),
         ];
         fruit = new Fruit({ x: gridSize / 2, y: gridSize / 2 }, { r: gridSize / 2 });
         game.animate();
@@ -119,9 +145,10 @@ class Game {
         stopGame = true;
     }
     addPoint() {
-        points++;
-        pointBox.innerText = points.toString();
+        this.points++;
+        pointBox.innerText = this.points.toString();
         stopDrawFruit = false;
+        //SPRAWDZENIE W KTORA STRONE IDZIE WONSZ, A POZNIEJ DODANIE KOLEJNEGO KAWALKA Z PRZECIWNEJ STRONY
         let snakeX = 0;
         let snakeY = 0;
         if (snakeParts[snakeParts.length - 1].vel.x === gridSize) {
@@ -140,16 +167,12 @@ class Game {
             snakeY = snakeParts[snakeParts.length - 1].pos.y + gridSize;
             snakeX = snakeParts[snakeParts.length - 1].pos.x;
         }
-        console.log(snakeY);
-        console.log(snakeX);
-        snakeParts.push(new Snake(
-        // { x: SCREEN_CENTER.x, y: SCREEN_CENTER.y },
-        {
+        snakeParts.push(new Snake({
             x: snakeX,
             y: snakeY,
         }, {
-            x: snakeParts[snakeParts.length - 1].vel.x,
-            y: snakeParts[snakeParts.length - 1].vel.y,
+            x: 0,
+            y: 0,
         }, { w: gridSize, h: gridSize }));
         console.log(snakeParts);
     }
@@ -177,13 +200,14 @@ class Game {
     animate() {
         if (stopGame)
             return;
-        for (let i = 0; i <= snakeParts.length - 1; i++)
-            snakeParts[i].update();
+        // for (let i = 0; i <= snakeParts.length - 1; i++) snakeParts[i].update();
+        snakeParts[0].update();
         game.collisionDetect();
         game.outOfBoard();
         ctx === null || ctx === void 0 ? void 0 : ctx.clearRect(0, 0, canvas.width, canvas.height);
         for (let i = 0; i <= snakeParts.length - 1; i++)
             snakeParts[i].drawSnake();
+        snakeParts[0].moveSnake();
         fruit.drawFruit();
         stopDrawFruit = true;
         game.keyPress();
