@@ -11,16 +11,24 @@ canvas.style.height = "100%";
 canvas.width = canvas.offsetWidth;
 canvas.height = canvas.offsetHeight;
 const SCREEN_CENTER = { x: canvas.offsetWidth / 2, y: canvas.offsetHeight / 2 };
-console.log(canvas.width);
+
+let appleImage = new Image();
+appleImage.src = "../../dist/img/apple.png";
 
 //let points = 0;
-let speed = 5;
+let speed = 3;
 let grid = 10;
 let gridSize = canvas.width / grid;
+console.log(gridSize);
 let stopGame = true;
 let stopDrawFruit = false;
 let fruitX = 0;
 let fruitY = 0;
+const spawnPoint = {
+  x: Math.floor(grid / 2) * gridSize,
+  y: Math.floor(grid / 2) * gridSize,
+};
+
 // window.addEventListener("resize", () => {
 //   let canvas = document.getElementById(" #canvas") as HTMLCanvasElement;
 //   canvas.width = window.innerWidth;
@@ -86,22 +94,38 @@ class Fruit {
     this.size = size;
   }
   randomCoords() {
-    const randomX = Math.floor(Math.random() * grid + 1) * gridSize - gridSize / 2;
+    const randomX = Math.floor(Math.random() * grid + 1) * gridSize - (gridSize * 3) / 4;
+    const randomY = Math.floor(Math.random() * grid + 1) * gridSize - (gridSize * 3) / 4;
+    console.log(randomX);
+    console.log(randomY);
 
-    const randomY = Math.floor(Math.random() * grid + 1) * gridSize - gridSize / 2;
+    //JESLI OWOC POKRYWA SIE Z WEZEM TO GENERUJ OWOC JESZCZE RAZ
+    if (
+      snakeParts.some((e) => {
+        return (
+          e.pos.x + gridSize / 2 == randomX + gridSize / 4 &&
+          e.pos.y + gridSize / 2 == randomY + gridSize / 4
+        );
+      })
+    ) {
+      console.log("PPPPPPPPPPPPP");
 
-    return [randomX, randomY];
+      fruit.drawFruit();
+    } else return [randomX, randomY];
   }
   drawFruit() {
     if (!stopDrawFruit) {
       const randomCoords = this.randomCoords();
 
-      fruitX = randomCoords[0];
-      fruitY = randomCoords[1];
+      if (randomCoords != undefined) {
+        fruitX = randomCoords[0];
+        fruitY = randomCoords[1];
+      }
     }
-    ctx?.beginPath();
-    ctx?.arc(fruitX, fruitY, this.size.r, 0, 2 * Math.PI);
-    ctx?.stroke();
+    // ctx?.beginPath();
+    // ctx?.arc(fruitX, fruitY, this.size.r, 0, 2 * Math.PI);
+    // ctx?.stroke();
+    ctx?.drawImage(appleImage, fruitX, fruitY, this.size.r, this.size.r);
   }
 }
 
@@ -159,7 +183,7 @@ class Game {
     game = new Game();
     snakeParts = [
       new Snake(
-        { x: SCREEN_CENTER.x, y: SCREEN_CENTER.y },
+        { x: spawnPoint.x, y: spawnPoint.y },
         { x: 0, y: 0 },
         { w: gridSize, h: gridSize }
       ),
@@ -169,7 +193,10 @@ class Game {
       //   { w: gridSize, h: gridSize }
       // ),
     ];
-    fruit = new Fruit({ x: gridSize / 2, y: gridSize / 2 }, { r: gridSize / 2 });
+    fruit = new Fruit(
+      { x: gridSize - (gridSize * 3) / 4, y: gridSize - (gridSize * 3) / 4 },
+      { r: gridSize / 2 }
+    );
 
     game.animate();
   }
@@ -204,26 +231,15 @@ class Game {
     }
 
     snakeParts.push(
-      new Snake(
-        {
-          x: snakeX,
-          y: snakeY,
-        },
-        {
-          x: 0,
-          y: 0,
-        },
-        { w: gridSize, h: gridSize }
-      )
+      new Snake({ x: snakeX, y: snakeY }, { x: 0, y: 0 }, { w: gridSize, h: gridSize })
     );
-    console.log(snakeParts);
   }
 
   collisionDetect() {
     snakeParts[0].collision = false;
 
     if (
-      this.intersect(
+      this.intersectWithFruit(
         snakeParts[0].pos.x,
         snakeParts[0].pos.y,
         snakeParts[0].size.w,
@@ -239,7 +255,7 @@ class Game {
     }
   }
 
-  intersect(
+  intersectWithFruit(
     x1: number,
     y1: number,
     w1: number,
@@ -251,14 +267,24 @@ class Game {
     if (x2 >= w1 + x1 || x1 >= r + x2 || y2 >= h1 + y1 || y1 >= r + y2) return false;
     return true;
   }
-
+  intersectWithSnake() {
+    for (let i = 4; i < snakeParts.length; i++) {
+      if (
+        snakeParts[0].pos.x == snakeParts[i].pos.x &&
+        snakeParts[0].pos.y == snakeParts[i].pos.y
+      ) {
+        game.gameOver();
+      }
+    }
+  }
   outOfBoard() {
     if (
-      snakeParts[0].pos.x < 0 ||
-      snakeParts[0].pos.x + gridSize > canvas.offsetWidth ||
-      snakeParts[0].pos.y < 0 ||
-      snakeParts[0].pos.y + gridSize > canvas.offsetHeight
+      snakeParts[0].pos.x + gridSize / 2 < 0 ||
+      snakeParts[0].pos.x + gridSize / 2 > canvas.width ||
+      snakeParts[0].pos.y + gridSize / 2 < 0 ||
+      snakeParts[0].pos.y + gridSize / 2 > canvas.height
     ) {
+      console.log(snakeParts[0].pos.x + "  " + gridSize + "  " + canvas.offsetWidth);
       game.gameOver();
     }
   }
@@ -268,6 +294,7 @@ class Game {
     // for (let i = 0; i <= snakeParts.length - 1; i++) snakeParts[i].update();
     snakeParts[0].update();
     game.collisionDetect();
+    game.intersectWithSnake();
     game.outOfBoard();
     ctx?.clearRect(0, 0, canvas.width, canvas.height);
     for (let i = 0; i <= snakeParts.length - 1; i++) snakeParts[i].drawSnake();
@@ -283,12 +310,15 @@ class Game {
 let game = new Game();
 let snakeParts = [
   new Snake(
-    { x: SCREEN_CENTER.x, y: SCREEN_CENTER.y },
+    { x: spawnPoint.x, y: spawnPoint.y },
     { x: 0, y: 0 },
     { w: gridSize, h: gridSize }
   ),
 ];
-let fruit = new Fruit({ x: gridSize / 2, y: gridSize / 2 }, { r: gridSize / 2 });
+let fruit = new Fruit(
+  { x: gridSize - (gridSize * 3) / 4, y: gridSize - (gridSize * 3) / 4 },
+  { r: gridSize / 2 }
+);
 
 startButton.addEventListener("click", (e) => {
   e.preventDefault();
