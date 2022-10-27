@@ -13,6 +13,7 @@ canvas.style.height = "100%";
 canvas.width = canvas.offsetWidth;
 canvas.height = canvas.offsetHeight;
 const SCREEN_CENTER = { x: canvas.offsetWidth / 2, y: canvas.offsetHeight / 2 };
+console.log(canvas.offsetWidth);
 let appleImage = new Image();
 appleImage.src = "../../dist/img/apple.png";
 let speed = 3;
@@ -58,14 +59,28 @@ class Fruit {
         const randomX = Math.floor(Math.random() * grid + 1) * gridSize - (gridSize * 3) / 4;
         const randomY = Math.floor(Math.random() * grid + 1) * gridSize - (gridSize * 3) / 4;
         //JESLI OWOC POKRYWA SIE Z WEZEM TO GENERUJ OWOC JESZCZE RAZ
-        if (snakeParts.some((e) => {
-            return (Math.ceil(e.pos.x + (gridSize * 2) / 5) === randomX + gridSize / 4 &&
-                Math.ceil(e.pos.y + (gridSize * 2) / 5) === randomY + gridSize / 4);
-        })) {
-            fruit.drawFruit();
+        if (canvas.offsetWidth >= 450) {
+            if (snakeParts.some((e) => {
+                return (e.pos.x + (gridSize * 2) / 5 === randomX + gridSize / 4 &&
+                    e.pos.y + (gridSize * 2) / 5 === randomY + gridSize / 4);
+            })) {
+                console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
+                fruit.drawFruit();
+            }
+            else
+                return [randomX, randomY];
         }
-        else
-            return [randomX, randomY];
+        else {
+            if (snakeParts.some((e) => {
+                return (Math.ceil(e.pos.x + (gridSize * 2) / 5) === randomX + gridSize / 4 &&
+                    Math.ceil(e.pos.y + (gridSize * 2) / 5) === randomY + gridSize / 4);
+            })) {
+                console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
+                fruit.drawFruit();
+            }
+            else
+                return [randomX, randomY];
+        }
     }
     drawFruit() {
         if (!stopDrawFruit) {
@@ -218,6 +233,5 @@ let fruit = new Fruit({ x: gridSize - (gridSize * 3) / 4, y: gridSize - (gridSiz
 startButton.addEventListener("click", (e) => {
     e.preventDefault();
     const size = document.getElementById("size");
-    console.log(size.value);
     game.start();
 });
