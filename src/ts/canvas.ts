@@ -78,10 +78,16 @@ class Fruit {
     const randomX = Math.floor(Math.random() * grid + 1) * gridSize - (gridSize * 3) / 4;
     const randomY = Math.floor(Math.random() * grid + 1) * gridSize - (gridSize * 3) / 4;
     //JESLI OWOC POKRYWA SIE Z WEZEM TO GENERUJ OWOC JESZCZE RAZ
-
+    console.log(randomX + gridSize / 4 + " " + randomY + gridSize / 4);
     if (canvas.offsetWidth >= 450) {
       if (
         snakeParts.some((e) => {
+          console.log(
+            "snake" +
+              Math.ceil(e.pos.x + (gridSize * 2) / 5) +
+              "  " +
+              Math.ceil(e.pos.y + (gridSize * 2) / 5)
+          );
           return (
             e.pos.x + (gridSize * 2) / 5 === randomX + gridSize / 4 &&
             e.pos.y + (gridSize * 2) / 5 === randomY + gridSize / 4
@@ -95,9 +101,16 @@ class Fruit {
     } else {
       if (
         snakeParts.some((e) => {
+          console.log(
+            "snake" +
+              Math.ceil(e.pos.x + (gridSize * 2) / 5) +
+              "  " +
+              Math.ceil(e.pos.y + (gridSize * 2) / 5)
+          );
           return (
-            Math.ceil(e.pos.x + (gridSize * 2) / 5) === randomX + gridSize / 4 &&
-            Math.ceil(e.pos.y + (gridSize * 2) / 5) === randomY + gridSize / 4
+            Math.ceil(e.pos.x + (gridSize * 2) / 5) ===
+              Math.ceil(randomX + gridSize / 4) &&
+            Math.ceil(e.pos.y + (gridSize * 2) / 5) === Math.ceil(randomY + gridSize / 4)
           );
         })
       ) {
