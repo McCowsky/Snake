@@ -33,11 +33,13 @@ class Game {
             y: Math.floor(this.grid / 2) * this.gridSize + this.gridSize / 10,
         };
         this.points = 0;
+        this.animate = this.animate.bind(this);
         startButton.addEventListener("click", (e) => {
             e.preventDefault();
             const size = document.getElementById("size");
             console.log(size.value);
-            //this.grid = parseInt(size.value)
+            //this.grid = parseInt(size.value);
+            //this.gridSize = canvas.canvas.offsetWidth / this.grid;
             this.start();
         });
     }
@@ -161,12 +163,12 @@ class Game {
     }
     animate() {
         var _a;
-        if (game.stopGame)
+        if (this.stopGame)
             return;
         snakeParts[0].update();
-        game.collisionDetect();
-        game.intersectWithSnake();
-        game.outOfBoard();
+        this.collisionDetect();
+        this.intersectWithSnake();
+        this.outOfBoard();
         (_a = canvas.ctx) === null || _a === void 0 ? void 0 : _a.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
         fruit.drawFruit();
         for (let i = 0; i <= snakeParts.length - 1; i++) {
@@ -175,7 +177,7 @@ class Game {
         }
         snakeParts[0].moveSnake();
         fruit.stopRandomFruit = true;
-        game.keyPress();
+        this.keyPress();
         setTimeout(game.animate, 1000 / game.speed);
     }
 }

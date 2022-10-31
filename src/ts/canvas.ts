@@ -48,11 +48,14 @@ class Canvas {
 
 class Game {
   constructor(startButton: HTMLButtonElement) {
+    this.animate = this.animate.bind(this);
+
     startButton.addEventListener("click", (e) => {
       e.preventDefault();
       const size = document.getElementById("size") as HTMLSelectElement;
       console.log(size.value);
-      //this.grid = parseInt(size.value)
+      //this.grid = parseInt(size.value);
+      //this.gridSize = canvas.canvas.offsetWidth / this.grid;
       this.start();
     });
   }
@@ -219,11 +222,11 @@ class Game {
   }
 
   animate() {
-    if (game.stopGame) return;
+    if (this.stopGame) return;
     snakeParts[0].update();
-    game.collisionDetect();
-    game.intersectWithSnake();
-    game.outOfBoard();
+    this.collisionDetect();
+    this.intersectWithSnake();
+    this.outOfBoard();
     canvas.ctx?.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
     fruit.drawFruit();
     for (let i = 0; i <= snakeParts.length - 1; i++) {
@@ -233,7 +236,7 @@ class Game {
     snakeParts[0].moveSnake();
 
     fruit.stopRandomFruit = true;
-    game.keyPress();
+    this.keyPress();
     setTimeout(game.animate, 1000 / game.speed);
   }
 }
@@ -335,7 +338,7 @@ class Fruit {
 
 let canvas = new Canvas();
 let game = new Game(canvas.startButton);
-let snakeParts = [
+let snakeParts: any[] = [
   new Snake(
     { x: game.spawnPoint.x, y: game.spawnPoint.y },
     { x: 0, y: 0 },
