@@ -700,8 +700,8 @@ video {
   background-color: rgb(217 3 104 / var(--tw-bg-opacity));
 }
 
-.bg-\[url\(\'\/dist\/img\/grass\.jpg\'\)\] {
-  background-image: url('/dist/img/grass.jpg');
+.bg-\[url\(\'\.\.\/dist\/img\/grass\.jpg\'\)\] {
+  background-image: url('../dist/img/grass.jpg');
 }
 
 .bg-cover {
@@ -793,10 +793,6 @@ video {
 
   .sm\:w-\[450px\] {
     width: 450px;
-  }
-
-  .sm\:w-\[\] {
-    width: ;
   }
 
   .sm\:max-w-\[450px\] {
