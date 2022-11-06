@@ -12,8 +12,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/dist/output.css">
-    <script src="/dist/js/canvas.js" defer></script>
+    <link rel="stylesheet" href="./dist/output.css">
+    <script src="./dist/js/canvas.js" defer></script>
 
     <title>Snake game</title>
 </head>
@@ -22,12 +22,12 @@
     <div
         class="text-black  bg-[#101119] w-full sm:max-w-[450px] h-full sm:h-[100vh] sm:flex sm:flex-col sm:items-center sm:justify-center relative my-0 mx-auto">
         <div class="w-full aspect-square sm:max-w-[450px] sm:max-h-[450px] relative">
-            <canvas id="canvas" class="block bg-[url('/dist/img/grass.jpg')] bg-cover "></canvas>
+            <canvas id="canvas" class="block bg-[url('./dist/img/grass.jpg')] bg-cover "></canvas>
             <div class="flex flex-col-reverse sm:flex-col items-center justify-center gap-16 w-full sm:absolute sm:top-[-155px] 
             ">
                 <h2 class="text-5xl font-bold text-[#D90368]">SNAKE</h2>
                 <div class="flex  items-center gap-4">
-                    <img src="/dist/img/apple.png" alt="apple" class="w-7">
+                    <img src="./dist/img/apple.png" alt="apple" class="w-7">
                     <h3 id="pointBox" class="text-4xl text-white">0</h3>
                 </div>
             </div>
