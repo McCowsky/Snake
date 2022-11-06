@@ -218,7 +218,7 @@ class Fruit {
     }
     getImage() {
         const appleImage = new Image();
-        appleImage.src = "../../dist/img/apple.png";
+        appleImage.src = "../Snake/dist/img/apple.png";
         return appleImage;
     }
     randomCoords() {
