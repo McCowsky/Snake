@@ -8,52 +8,64 @@
     <meta name="description" content="Snake game">
     <meta name="author" content="Mateusz Makowski">
     <meta name="keywords" content="HTML, CSS, TailwindCSS, git, Snake, game, TypeScripit, JS, retro">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/dist/output.css">
     <script src="/dist/js/canvas.js" defer></script>
 
     <title>Snake game</title>
 </head>
 
-<body class="h-full bg-[#101119]">
+<body class="h-full bg-[#101119] font-poppins">
     <div
-        class="text-black  bg-white w-full sm:max-w-[450px] h-full sm:h-[100vh] sm:flex sm:flex-col sm:items-center sm:justify-center relative my-0 mx-auto">
-        <div class="w-full aspect-square sm:max-w-[450px] sm:max-h-[450px] ">
-            <canvas id="canvas" class="block border-2 bg-[url('/dist/img/grass.jpg')] bg-cover"></canvas>
-        </div>
-        <div class="flex items-center gap-3">
-            <img src="/dist/img/apple.png" alt="apple" class="w-7">
-            <h3 id="pointBox" class="text-4xl">0</h3>
-        </div>
-        <!-- <div class="w-full h-full bg-black absolute top-0 hidden" id="gameOver">
-            <h2 class="text-white">GAME OVER</h2>
-        </div> -->
-        <div class="w-full h-full bg-black/75 absolute top-0 text-black flex flex-col items-center justify-center"
-            id="mainMenu">
-            <div class="w-[350px] h-[350px] bg-white flex flex-col gap-10 items-center justify-center">
-                <h2 class=" text-5xl font-bold" id="title">SNAKE</h2>
-                <h2 class="hidden text-3xl" id="win">YOU WON</h2>
-                <h2 class="hidden text-3xl" id="gameOver">GAME OVER</h2>
-                <form action="" class="flex flex-col gap-5 items-center justify-center">
-                    <div class="flex gap-10">
-                        <div class="flex flex-col gap-3 items-center">
-                            <label for="speed">Game speed</label>
-                            <select name="speed" class="w-24" id="speed">
-                                <option value="slow">slow</option>
-                                <option value="normal">normal</option>
-                                <option value="fast">fast</option>
-                            </select>
-                        </div>
-                        <div class="flex flex-col gap-3 items-center">
+        class="text-black  bg-[#101119] w-full sm:max-w-[450px] h-full sm:h-[100vh] sm:flex sm:flex-col sm:items-center sm:justify-center relative my-0 mx-auto">
+        <div class="w-full aspect-square sm:max-w-[450px] sm:max-h-[450px] relative">
+            <canvas id="canvas" class="block bg-[url('/dist/img/grass.jpg')] bg-cover "></canvas>
+            <div class="flex flex-col-reverse sm:flex-col items-center justify-center gap-16 w-full sm:absolute sm:top-[-155px] 
+            ">
+                <h2 class="text-5xl font-bold text-[#D90368]">SNAKE</h2>
+                <div class="flex  items-center gap-4">
+                    <img src="/dist/img/apple.png" alt="apple" class="w-7">
+                    <h3 id="pointBox" class="text-4xl text-white">0</h3>
+                </div>
+            </div>
 
-                            <label for="size">Board size</label>
-                            <select name="size" class="w-24" id="size">
-                                <option value="5">5x5</option>
-                                <option value="7">7x7</option>
-                            </select>
+        </div>
+
+        <div class="w-full h-full  absolute top-0 text-black flex flex-col items-center justify-center" id="mainMenu">
+
+            <div class="w-full h-full sm:h-[450px] sm:w-[450px] bg-black/75 flex flex-col items-center justify-center">
+                <div class="w-[350px] h-[350px] bg-white flex flex-col gap-10 items-center justify-center">
+                    <h2 class=" text-5xl font-bold text-[#D90368]" id="title">SNAKE</h2>
+                    <h2 class="hidden text-4xl font-bold text-[#D90368]" id="win">YOU WON</h2>
+                    <h2 class="hidden text-4xl font-bold text-[#D90368]" id="gameOver">GAME OVER</h2>
+                    <form action="" class="flex flex-col gap-5 items-center justify-center">
+                        <div class="flex gap-10">
+                            <div class="flex flex-col gap-3 items-center text-lg">
+                                <label for="speed" class="font-bold">Game speed</label>
+                                <select name="speed" class="w-32 h-10 border-[1px] border-black text-center" id="speed">
+                                    <option value="2">slow</option>
+                                    <option value="3" selected="selected">normal</option>
+                                    <option value="5">fast</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col gap-3 items-center text-lg">
+                                <label for="size" class="font-bold">Board size</label>
+                                <select name="size" class="w-32 h-10 border-[1px] border-[#D90368] text-center"
+                                    id="size">
+                                    <option value="5" selected="selected">5x5</option>
+                                    <option value="7">7x7</option>
+                                    <option value="10">10x10</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <button class="py-2 bg-yellow-300 w-32" id="startButton">Start game</button>
-                </form>
+                        <button
+                            class="py-2 bg-[#D90368] w-36 text-lg shadow-[0_0_30px_-10px_rgba(66,68,90,1)] text-white hover:bg-black font-bold"
+                            id="startButton">Start game</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

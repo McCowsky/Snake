@@ -1,24 +1,58 @@
-// const pointBox = document.getElementById("pointBox") as HTMLParagraphElement;
-// const gameOver = document.getElementById("gameOver") as HTMLHeadingElement;
-// const win = document.getElementById("win") as HTMLHeadingElement;
-// const mainMenu = document.getElementById("mainMenu") as HTMLDivElement;
-// const startButton = document.getElementById("startButton") as HTMLButtonElement;
-
-// const canvas = document.getElementById("canvas") as HTMLCanvasElement;
-// const ctx = canvas.getContext("2d");
-// if (ctx === null) window.alert("refresh page");
-// canvas.style.width = "100%";
-// canvas.style.height = "100%";
-// canvas.width = canvas.offsetWidth;
-// canvas.height = canvas.offsetHeight;
-// const SCREEN_CENTER = { x: canvas.offsetWidth / 2, y: canvas.offsetHeight / 2 };
 type CoordsSizes = {
   x: number;
   y: number;
 };
 
-// let appleImage = new Image();
-// appleImage.src = "../../dist/img/apple.png";
+type FruitElements = {
+  fruitX: number;
+  fruitY: number;
+  stopRandomFruit: boolean;
+  pos: CoordsSizes;
+  size: CoordsSizes;
+  getImage(): void;
+  randomCoords(): void;
+  drawFruit(): void;
+};
+
+type SnakeElements = {
+  pos: CoordsSizes;
+  vel: CoordsSizes;
+  size: CoordsSizes;
+  collision: boolean;
+  drawSnake(): void;
+  moveSnake(): void;
+  update(): void;
+};
+
+type CanvasElements = {
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+  pointBox: HTMLParagraphElement;
+  gameOver: HTMLHeadingElement;
+  win: HTMLHeadingElement;
+  title: HTMLHeadingElement;
+  mainMenu: HTMLDivElement;
+  startButton: HTMLButtonElement;
+};
+
+type GameElements = {
+  stopGame: boolean;
+  speed: number;
+  grid: number;
+  gridSize: number;
+  spawnPoint: CoordsSizes;
+  keyPress(): void;
+  reset(): void;
+  start(): void;
+  gameOver(): void;
+  win(): void;
+  addPoint(): void;
+  collisionDetect(): void;
+  intersectWithFruit(): void;
+  intersectWithSnake(): void;
+  outOfBoard(): void;
+  animate(): void;
+};
 
 class Canvas {
   canvas: HTMLCanvasElement;
@@ -49,25 +83,45 @@ class Canvas {
 class Game {
   constructor(startButton: HTMLButtonElement) {
     this.animate = this.animate.bind(this);
-
     startButton.addEventListener("click", (e) => {
       e.preventDefault();
       const size = document.getElementById("size") as HTMLSelectElement;
-      console.log(size.value);
-      //this.grid = parseInt(size.value);
-      //this.gridSize = canvas.canvas.offsetWidth / this.grid;
+      const speed = document.getElementById("speed") as HTMLSelectElement;
+
+      this.speed = parseInt(speed.value);
+      this.grid = parseInt(size.value);
+      this.gridSize = canvas.canvas.offsetWidth / this.grid;
+
+      this.spawnPoint = {
+        x: Math.floor(this.grid / 2) * this.gridSize + this.gridSize / 10,
+        y: Math.floor(this.grid / 2) * this.gridSize + this.gridSize / 10,
+      };
+      snakeParts = [
+        new Snake(
+          { x: game.spawnPoint.x, y: game.spawnPoint.y },
+          { x: 0, y: 0 },
+          { x: (game.gridSize * 4) / 5, y: (game.gridSize * 4) / 5 }
+        ),
+      ];
+      fruit = new Fruit(
+        {
+          x: game.gridSize - (game.gridSize * 3) / 4,
+          y: game.gridSize - (game.gridSize * 3) / 4,
+        },
+        { x: game.gridSize / 2, y: game.gridSize / 2 }
+      );
       this.start();
     });
   }
-  stopGame = false;
-  speed = 3;
-  grid = 4;
-  gridSize = canvas.canvas.offsetWidth / this.grid;
-  spawnPoint = {
+  stopGame: boolean = false;
+  speed: number = 3;
+  grid: number = 4;
+  gridSize: number = canvas.canvas.offsetWidth / this.grid;
+  spawnPoint: CoordsSizes = {
     x: Math.floor(this.grid / 2) * this.gridSize + this.gridSize / 10,
     y: Math.floor(this.grid / 2) * this.gridSize + this.gridSize / 10,
   };
-  points = 0;
+  points: number = 0;
   keyPress() {
     window.addEventListener(
       "keyup",
@@ -119,7 +173,6 @@ class Game {
     canvas.pointBox.innerText = this.points.toString();
     canvas.title.classList.add("hidden");
     canvas.win.classList.add("hidden");
-
     canvas.mainMenu.classList.remove("hidden");
     canvas.gameOver.classList.remove("hidden");
   }
@@ -128,7 +181,6 @@ class Game {
     this.points = 0;
     canvas.pointBox.innerText = this.points.toString();
     canvas.title.classList.add("hidden");
-
     canvas.gameOver.classList.add("hidden");
     canvas.win.classList.remove("hidden");
     canvas.mainMenu.classList.remove("hidden");
@@ -139,10 +191,9 @@ class Game {
     if (this.points === Math.pow(this.grid, 2) - 2) game.win();
     canvas.pointBox.innerText = this.points.toString();
     fruit.stopRandomFruit = false;
-
     //SPRAWDZENIE W KTORA STRONE IDZIE WONSZ, A POZNIEJ DODANIE KOLEJNEGO KAWALKA Z PRZECIWNEJ STRONY
-    let snakeX = 0;
-    let snakeY = 0;
+    let snakeX: number = 0;
+    let snakeY: number = 0;
     if (snakeParts[snakeParts.length - 1].vel.x === this.gridSize) {
       snakeX = snakeParts[snakeParts.length - 1].pos.x - this.gridSize;
       snakeY = snakeParts[snakeParts.length - 1].pos.y;
@@ -171,7 +222,6 @@ class Game {
 
   collisionDetect() {
     snakeParts[0].collision = false;
-
     if (
       this.intersectWithFruit(
         snakeParts[0].pos.x,
@@ -230,14 +280,13 @@ class Game {
     canvas.ctx?.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
     fruit.drawFruit();
     for (let i = 0; i <= snakeParts.length - 1; i++) {
-      i === 0 ? (canvas.ctx.fillStyle = "#FF0000") : (canvas.ctx.fillStyle = "#000000");
+      i === 0 ? (canvas.ctx.fillStyle = "#D90368") : (canvas.ctx.fillStyle = "#000000");
       snakeParts[i].drawSnake();
     }
     snakeParts[0].moveSnake();
-
     fruit.stopRandomFruit = true;
     this.keyPress();
-    setTimeout(game.animate, 1000 / game.speed);
+    setTimeout(this.animate, 1000 / this.speed);
   }
 }
 
@@ -272,10 +321,11 @@ class Snake {
     snakeParts[0].pos.y += snakeParts[0].vel.y;
   }
 }
+
 class Fruit {
-  fruitX = 0;
-  fruitY = 0;
-  stopRandomFruit = false;
+  fruitX: number = 0;
+  fruitY: number = 0;
+  stopRandomFruit: boolean = false;
   pos: CoordsSizes;
   size: CoordsSizes;
   constructor(pos: CoordsSizes, size: CoordsSizes) {
@@ -302,7 +352,7 @@ class Fruit {
           );
         })
       ) {
-        fruit.drawFruit();
+        this.drawFruit();
       } else return [randomX, randomY];
     } else {
       if (
@@ -315,7 +365,7 @@ class Fruit {
           );
         })
       ) {
-        fruit.drawFruit();
+        this.drawFruit();
       } else return [randomX, randomY];
     }
   }
@@ -336,19 +386,7 @@ class Fruit {
   }
 }
 
-let canvas = new Canvas();
+let canvas: CanvasElements = new Canvas();
 let game = new Game(canvas.startButton);
-let snakeParts: any[] = [
-  new Snake(
-    { x: game.spawnPoint.x, y: game.spawnPoint.y },
-    { x: 0, y: 0 },
-    { x: (game.gridSize * 4) / 5, y: (game.gridSize * 4) / 5 }
-  ),
-];
-let fruit = new Fruit(
-  {
-    x: game.gridSize - (game.gridSize * 3) / 4,
-    y: game.gridSize - (game.gridSize * 3) / 4,
-  },
-  { x: game.gridSize / 2, y: game.gridSize / 2 }
-);
+let snakeParts: SnakeElements[] = [];
+let fruit: FruitElements;

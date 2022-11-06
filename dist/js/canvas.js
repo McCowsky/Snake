@@ -1,11 +1,4 @@
 "use strict";
-// const pointBox = document.getElementById("pointBox") as HTMLParagraphElement;
-// const gameOver = document.getElementById("gameOver") as HTMLHeadingElement;
-// const win = document.getElementById("win") as HTMLHeadingElement;
-// const mainMenu = document.getElementById("mainMenu") as HTMLDivElement;
-// const startButton = document.getElementById("startButton") as HTMLButtonElement;
-// let appleImage = new Image();
-// appleImage.src = "../../dist/img/apple.png";
 class Canvas {
     constructor() {
         this.canvas = document.getElementById("canvas");
@@ -37,9 +30,21 @@ class Game {
         startButton.addEventListener("click", (e) => {
             e.preventDefault();
             const size = document.getElementById("size");
-            console.log(size.value);
-            //this.grid = parseInt(size.value);
-            //this.gridSize = canvas.canvas.offsetWidth / this.grid;
+            const speed = document.getElementById("speed");
+            this.speed = parseInt(speed.value);
+            this.grid = parseInt(size.value);
+            this.gridSize = canvas.canvas.offsetWidth / this.grid;
+            this.spawnPoint = {
+                x: Math.floor(this.grid / 2) * this.gridSize + this.gridSize / 10,
+                y: Math.floor(this.grid / 2) * this.gridSize + this.gridSize / 10,
+            };
+            snakeParts = [
+                new Snake({ x: game.spawnPoint.x, y: game.spawnPoint.y }, { x: 0, y: 0 }, { x: (game.gridSize * 4) / 5, y: (game.gridSize * 4) / 5 }),
+            ];
+            fruit = new Fruit({
+                x: game.gridSize - (game.gridSize * 3) / 4,
+                y: game.gridSize - (game.gridSize * 3) / 4,
+            }, { x: game.gridSize / 2, y: game.gridSize / 2 });
             this.start();
         });
     }
@@ -172,13 +177,13 @@ class Game {
         (_a = canvas.ctx) === null || _a === void 0 ? void 0 : _a.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
         fruit.drawFruit();
         for (let i = 0; i <= snakeParts.length - 1; i++) {
-            i === 0 ? (canvas.ctx.fillStyle = "#FF0000") : (canvas.ctx.fillStyle = "#000000");
+            i === 0 ? (canvas.ctx.fillStyle = "#D90368") : (canvas.ctx.fillStyle = "#000000");
             snakeParts[i].drawSnake();
         }
         snakeParts[0].moveSnake();
         fruit.stopRandomFruit = true;
         this.keyPress();
-        setTimeout(game.animate, 1000 / game.speed);
+        setTimeout(this.animate, 1000 / this.speed);
     }
 }
 class Snake {
@@ -225,7 +230,7 @@ class Fruit {
                 return (e.pos.x + (game.gridSize * 2) / 5 === randomX + game.gridSize / 4 &&
                     e.pos.y + (game.gridSize * 2) / 5 === randomY + game.gridSize / 4);
             })) {
-                fruit.drawFruit();
+                this.drawFruit();
             }
             else
                 return [randomX, randomY];
@@ -237,7 +242,7 @@ class Fruit {
                     Math.ceil(e.pos.y + (game.gridSize * 2) / 5) ===
                         Math.ceil(randomY + game.gridSize / 4));
             })) {
-                fruit.drawFruit();
+                this.drawFruit();
             }
             else
                 return [randomX, randomY];
@@ -257,10 +262,5 @@ class Fruit {
 }
 let canvas = new Canvas();
 let game = new Game(canvas.startButton);
-let snakeParts = [
-    new Snake({ x: game.spawnPoint.x, y: game.spawnPoint.y }, { x: 0, y: 0 }, { x: (game.gridSize * 4) / 5, y: (game.gridSize * 4) / 5 }),
-];
-let fruit = new Fruit({
-    x: game.gridSize - (game.gridSize * 3) / 4,
-    y: game.gridSize - (game.gridSize * 3) / 4,
-}, { x: game.gridSize / 2, y: game.gridSize / 2 });
+let snakeParts = [];
+let fruit;
