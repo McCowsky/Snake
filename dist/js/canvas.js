@@ -1,18 +1,25 @@
 "use strict";
 class Canvas {
     constructor() {
-        this.canvas = document.getElementById("canvas");
+        this.canvas = this.getElement("canvas");
         this.ctx = this.canvas.getContext("2d");
         this.canvas.style.width = "100%";
         this.canvas.style.height = "100%";
         this.canvas.width = this.canvas.offsetWidth;
         this.canvas.height = this.canvas.offsetHeight;
-        this.pointBox = document.getElementById("pointBox");
-        this.gameOver = document.getElementById("gameOver");
-        this.win = document.getElementById("win");
-        this.title = document.getElementById("title");
-        this.mainMenu = document.getElementById("mainMenu");
-        this.startButton = document.getElementById("startButton");
+        this.pointBox = this.getElement("pointBox");
+        this.gameOver = this.getElement("gameOver");
+        this.win = this.getElement("win");
+        this.title = this.getElement("title");
+        this.mainMenu = this.getElement("mainMenu");
+        this.startButton = this.getElement("startButton");
+    }
+    getElement(Id) {
+        const el = document.getElementById(Id);
+        if (!el) {
+            throw new Error(`Element with id: ${Id} does not exist.`);
+        }
+        return el;
     }
 }
 class Game {

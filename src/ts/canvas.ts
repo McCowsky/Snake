@@ -65,22 +65,40 @@ class Canvas {
   startButton: HTMLButtonElement;
 
   constructor() {
-    this.canvas = document.getElementById("canvas") as HTMLCanvasElement;
+    this.canvas = this.getElement<HTMLCanvasElement>("canvas");
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     this.canvas.style.width = "100%";
     this.canvas.style.height = "100%";
     this.canvas.width = this.canvas.offsetWidth;
     this.canvas.height = this.canvas.offsetHeight;
-    this.pointBox = document.getElementById("pointBox") as HTMLParagraphElement;
-    this.gameOver = document.getElementById("gameOver") as HTMLHeadingElement;
-    this.win = document.getElementById("win") as HTMLHeadingElement;
-    this.title = document.getElementById("title") as HTMLHeadingElement;
-    this.mainMenu = document.getElementById("mainMenu") as HTMLDivElement;
-    this.startButton = document.getElementById("startButton") as HTMLButtonElement;
+    this.pointBox = this.getElement<HTMLParagraphElement>("pointBox");
+    this.gameOver = this.getElement<HTMLHeadingElement>("gameOver");
+    this.win = this.getElement<HTMLHeadingElement>("win");
+    this.title = this.getElement<HTMLHeadingElement>("title");
+    this.mainMenu = this.getElement<HTMLDivElement>("mainMenu");
+    this.startButton = this.getElement<HTMLButtonElement>("startButton");
+  }
+
+  getElement<T>(Id: string) {
+    const el = document.getElementById(Id);
+    if (!el) {
+      throw new Error(`Element with id: ${Id} does not exist.`);
+    }
+    return el as T;
   }
 }
 
 class Game {
+  stopGame: boolean = false;
+  speed: number = 3;
+  grid: number = 4;
+  gridSize: number = canvas.canvas.offsetWidth / this.grid;
+  spawnPoint: CoordsSizes = {
+    x: Math.floor(this.grid / 2) * this.gridSize + this.gridSize / 10,
+    y: Math.floor(this.grid / 2) * this.gridSize + this.gridSize / 10,
+  };
+  points: number = 0;
+
   constructor(startButton: HTMLButtonElement) {
     this.animate = this.animate.bind(this);
     startButton.addEventListener("click", (e) => {
@@ -113,15 +131,7 @@ class Game {
       this.start();
     });
   }
-  stopGame: boolean = false;
-  speed: number = 3;
-  grid: number = 4;
-  gridSize: number = canvas.canvas.offsetWidth / this.grid;
-  spawnPoint: CoordsSizes = {
-    x: Math.floor(this.grid / 2) * this.gridSize + this.gridSize / 10,
-    y: Math.floor(this.grid / 2) * this.gridSize + this.gridSize / 10,
-  };
-  points: number = 0;
+
   keyPress() {
     window.addEventListener(
       "keyup",
